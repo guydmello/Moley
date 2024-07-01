@@ -15,6 +15,7 @@ function App() {
     });
 
     socket.on("chat message", (msg) => {
+      console.log("Message received:", msg);
       setChat((oldChat) => [...oldChat, msg]);
     });
 
@@ -28,6 +29,7 @@ function App() {
   const sendMessage = (e) => {
     e.preventDefault();
     if (message.trim()) {
+      console.log("Sending message:", message);
       socket.emit("chat message", message);
       setMessage("");
     }

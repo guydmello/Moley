@@ -18,17 +18,17 @@ const ioHandler = (req, res) => {
     });
 
     io.on("connection", (socket) => {
-        console.log("New client connected");
-      
-        socket.on("chat message", (msg) => {
-          console.log("Message received: ", msg);
-          io.emit("chat message", msg);
-        });
-      
-        socket.on("disconnect", () => {
-          console.log("Client disconnected");
-        });
+      console.log("New client connected");
+
+      socket.on("chat message", (msg) => {
+        console.log("Message received:", msg);
+        io.emit("chat message", msg);
       });
+
+      socket.on("disconnect", () => {
+        console.log("Client disconnected");
+      });
+    });
 
     httpServer.listen(0, () => {
       console.log("Server listening on port", httpServer.address().port);
