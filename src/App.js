@@ -9,7 +9,7 @@ function App() {
   const [chat, setChat] = useState([]);
   const socket = io(ENDPOINT, {
     path: "/api/chat",
-    transports: ["websocket", "polling"],
+    transports: ["polling"],
   });
 
   useEffect(() => {
