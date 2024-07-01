@@ -7,11 +7,9 @@ const ENDPOINT = "https://moley.vercel.app/api/chat";
 function App() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
-  let socket;
+  const socket = io(ENDPOINT, { path: "/api/chat" });
 
   useEffect(() => {
-    socket = io(ENDPOINT, { path: "/api/chat" });
-
     socket.on("chat message", (msg) => {
       setChat((oldChat) => [...oldChat, msg]);
     });

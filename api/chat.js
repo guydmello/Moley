@@ -1,33 +1,39 @@
 const { Server } = require("socket.io");
-const http = require("http");
+const { createServer } = require("http");
 
-let io;
-
-const server = http.createServer((req, res) => {
-  res.writeHead(200);
-  res.end("Socket.io server");
-});
-
-if (!io) {
-  io = new Server(server, {
-    path: "/api/chat",
-    addTrailingSlash: false,
-  });
-  io.on("connection", (socket) => {
-    console.log("New client connected");
-
-    socket.on("chat message", (msg) => {
-      io.emit("chat message", msg);
+const ioHandler = (req, res) => {
+  if (!res.socket.server.io) {
+    console.log("Starting Socket.io server...");
+    const httpServer = createServer((req, res) => {
+      res.writeHead(200, { "Content-Type": "text/plain" });
+      res.end("Socket.io server");
     });
 
-    socket.on("disconnect", () => {
-      console.log("Client disconnected");
+    const io = new Server(httpServer, {
+      path: "/api/chat",
     });
-  });
-}
 
-module.exports = (req, res) => {
-  if (req.method === "GET") {
-    res.status(200).send("Serverless Socket.io Function");
+    io.on("connection", (socket) => {
+      console.log("New client connected");
+
+      socket.on("chat message", (msg) => {
+        io.emit("chat message", msg);
+      });
+
+      socket.on("disconnect", () => {
+        console.log("Client disconnected");
+      });
+    });
+
+    httpServer.listen(0, () => {
+      console.log("Server listening on port", httpServer.address().port);
+    });
+
+    res.socket.server.io = io;
+  } else {
+    console.log("Socket.io server already running.");
   }
+  res.end();
 };
+
+module.exports = ioHandler;
