@@ -11,19 +11,24 @@ const ioHandler = (req, res) => {
 
     const io = new Server(httpServer, {
       path: "/api/chat",
+      cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+      }
     });
 
     io.on("connection", (socket) => {
-      console.log("New client connected");
-
-      socket.on("chat message", (msg) => {
-        io.emit("chat message", msg);
+        console.log("New client connected");
+      
+        socket.on("chat message", (msg) => {
+          console.log("Message received: ", msg);
+          io.emit("chat message", msg);
+        });
+      
+        socket.on("disconnect", () => {
+          console.log("Client disconnected");
+        });
       });
-
-      socket.on("disconnect", () => {
-        console.log("Client disconnected");
-      });
-    });
 
     httpServer.listen(0, () => {
       console.log("Server listening on port", httpServer.address().port);

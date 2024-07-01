@@ -10,17 +10,27 @@ function App() {
   const socket = io(ENDPOINT, { path: "/api/chat" });
 
   useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected to socket.io server");
+    });
+
     socket.on("chat message", (msg) => {
       setChat((oldChat) => [...oldChat, msg]);
     });
 
+    socket.on("disconnect", () => {
+      console.log("Disconnected from socket.io server");
+    });
+
     return () => socket.disconnect();
-  }, []);
+  }, [socket]);
 
   const sendMessage = (e) => {
     e.preventDefault();
-    socket.emit("chat message", message);
-    setMessage("");
+    if (message.trim()) {
+      socket.emit("chat message", message);
+      setMessage("");
+    }
   };
 
   return (
