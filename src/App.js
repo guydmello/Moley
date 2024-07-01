@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import "./App.css";
 
-const ENDPOINT = "https://moley.vercel.app/api/chat";
+const ENDPOINT = "https://moley.vercel.app";
 
 function App() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
-  const socket = io(ENDPOINT, { path: "/api/chat" });
+  const socket = io(ENDPOINT, {
+    path: "/api/chat",
+    transports: ["websocket", "polling"],
+  });
 
   useEffect(() => {
     socket.on("connect", () => {

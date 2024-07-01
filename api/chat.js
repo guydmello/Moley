@@ -30,7 +30,7 @@ const ioHandler = (req, res) => {
       });
     });
 
-    httpServer.listen(0, () => {
+    httpServer.listen(3000, () => {
       console.log("Server listening on port", httpServer.address().port);
     });
 
