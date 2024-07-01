@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import "./App.css";
 
-const ENDPOINT = "https://moley.vercel.app";
+const ENDPOINT = "https://moley.vercel.app/api/chat";
 
 function App() {
   const [message, setMessage] = useState("");
