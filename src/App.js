@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import socketIOClient from "socket.io-client";
+import io from "socket.io-client";
 import "./App.css";
 
-const ENDPOINT = "/api/chat"; // This will be your serverless function endpoint
+const ENDPOINT = "https://moley.vercel.app/api/chat";
 
 function App() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
+  let socket;
 
   useEffect(() => {
-    const socket = socketIOClient(ENDPOINT);
+    socket = io(ENDPOINT, { path: "/api/chat" });
+
     socket.on("chat message", (msg) => {
       setChat((oldChat) => [...oldChat, msg]);
     });
@@ -19,7 +21,6 @@ function App() {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    const socket = socketIOClient(ENDPOINT);
     socket.emit("chat message", message);
     setMessage("");
   };
